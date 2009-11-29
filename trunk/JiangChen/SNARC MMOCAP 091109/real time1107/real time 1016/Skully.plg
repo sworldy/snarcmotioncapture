@@ -1,0 +1,214 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Skully - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Debug/Skully.res" /d "_DEBUG" /d "_AFXDLL" "C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\Skully.rc"" 
+Creating temporary file "C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP19.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/Skully.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\FusionCenter.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\HierWin.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadAnimation.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadOBJ.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadSkel.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\MainFrm.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\MathDefs.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\SensorDataSetReader.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\Skeleton.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\Skully.cpp"
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\UnscentedKalmanFilter.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP19.tmp" 
+Creating temporary file "C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP1A.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/Skully.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP1A.tmp" 
+Creating temporary file "C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP1B.tmp" with contents
+[
+winmm.lib opengl32.lib glu32.lib glaux.lib libgslcblas.lib libgsl.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/Skully.pdb" /debug /machine:I386 /out:"Debug/Skully.exe" /pdbtype:sept /libpath:"C:\Program Files\GnuWin32\lib" 
+".\Debug\EulerAngles.obj"
+".\Debug\FusionCenter.obj"
+".\Debug\HierWin.obj"
+".\Debug\LoadAnimation.obj"
+".\Debug\LoadOBJ.obj"
+".\Debug\LoadSkel.obj"
+".\Debug\MainFrm.obj"
+".\Debug\MathDefs.obj"
+".\Debug\OGLView.obj"
+".\Debug\SensorDataSetReader.obj"
+".\Debug\Skeleton.obj"
+".\Debug\Skully.obj"
+".\Debug\StdAfx.obj"
+".\Debug\UnscentedKalmanFilter.obj"
+".\Debug\Skully.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP1B.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+EulerAngles.cpp
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(13) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(22) : warning C4244: 'initializing' : conversion from 'float' to 'unsigned int', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(33) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(38) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(41) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(41) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(41) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(50) : warning C4244: 'initializing' : conversion from 'float' to 'unsigned int', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(58) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(58) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(58) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(59) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(59) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(59) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(60) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(60) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(60) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(62) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(62) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(62) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(63) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(63) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(63) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(64) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(64) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(64) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(78) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(79) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(80) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(82) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(83) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(89) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(90) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(91) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(93) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(94) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(100) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(114) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(114) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(114) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(115) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(115) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(115) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(116) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(116) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(116) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(128) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(135) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(136) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(268) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(269) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(270) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(271) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(281) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(282) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(283) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\EulerAngles.cpp(284) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+FusionCenter.cpp
+fatal error C1083: Cannot open source file: 'C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\FusionCenter.cpp': No such file or directory
+HierWin.cpp
+LoadAnimation.cpp
+c:\documents and settings\ligang\桌面\real time1103\real time 1016\eulerangles.h(68) : warning C4005: 'DEGTORAD' : macro redefinition
+        c:\documents and settings\ligang\桌面\real time1103\real time 1016\mathdefs.h(31) : see previous definition of 'DEGTORAD'
+c:\documents and settings\ligang\桌面\real time1103\real time 1016\eulerangles.h(69) : warning C4005: 'RADTODEG' : macro redefinition
+        c:\documents and settings\ligang\桌面\real time1103\real time 1016\mathdefs.h(32) : see previous definition of 'RADTODEG'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadAnimation.cpp(27) : warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadAnimation.cpp(69) : error C2374: 'i' : redefinition; multiple initialization
+        C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadAnimation.cpp(52) : see declaration of 'i'
+LoadOBJ.cpp
+LoadSkel.cpp
+c:\documents and settings\ligang\桌面\real time1103\real time 1016\eulerangles.h(68) : warning C4005: 'DEGTORAD' : macro redefinition
+        c:\documents and settings\ligang\桌面\real time1103\real time 1016\mathdefs.h(31) : see previous definition of 'DEGTORAD'
+c:\documents and settings\ligang\桌面\real time1103\real time 1016\eulerangles.h(69) : warning C4005: 'RADTODEG' : macro redefinition
+        c:\documents and settings\ligang\桌面\real time1103\real time 1016\mathdefs.h(32) : see previous definition of 'RADTODEG'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadSkel.cpp(46) : warning C4101: 'quater' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\LoadSkel.cpp(272) : warning C4101: 'quater' : unreferenced local variable
+MainFrm.cpp
+MathDefs.cpp
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\MathDefs.cpp(158) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\MathDefs.cpp(162) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\MathDefs.cpp(173) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\MathDefs.cpp(181) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+OGLView.cpp
+c:\documents and settings\ligang\桌面\real time1103\real time 1016\eulerangles.h(68) : warning C4005: 'DEGTORAD' : macro redefinition
+        c:\documents and settings\ligang\桌面\real time1103\real time 1016\mathdefs.h(31) : see previous definition of 'DEGTORAD'
+c:\documents and settings\ligang\桌面\real time1103\real time 1016\eulerangles.h(69) : warning C4005: 'RADTODEG' : macro redefinition
+        c:\documents and settings\ligang\桌面\real time1103\real time 1016\mathdefs.h(32) : see previous definition of 'RADTODEG'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(283) : warning C4305: 'initializing' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(283) : warning C4305: 'initializing' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(283) : warning C4305: 'initializing' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(395) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(425) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(461) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(462) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(473) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(482) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(490) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(491) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(499) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(508) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(342) : warning C4101: 'quater' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(559) : warning C4101: 'quater' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(677) : warning C4101: 'cdata' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(737) : warning C4101: 'cdata' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(849) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(879) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(915) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(916) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(927) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(936) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(944) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(945) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(953) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(962) : warning C4305: 'argument' : truncation from 'const double' to 'float'
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(796) : warning C4101: 'quater' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(1021) : warning C4101: 'quater' : unreferenced local variable
+C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\OGLView.cpp(1112) : warning C4101: 'quater' : unreferenced local variable
+SensorDataSetReader.cpp
+fatal error C1083: Cannot open source file: 'C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\SensorDataSetReader.cpp': No such file or directory
+Skeleton.cpp
+Skully.cpp
+UnscentedKalmanFilter.cpp
+fatal error C1083: Cannot open source file: 'C:\Documents and Settings\ligang\桌面\real time1103\real time 1016\UnscentedKalmanFilter.cpp': No such file or directory
+Generating Code...
+Error executing cl.exe.
+Creating temporary file "C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP1C.tmp" with contents
+[
+/nologo /o"Debug/Skully.bsc" 
+".\Debug\StdAfx.sbr"
+".\Debug\EulerAngles.sbr"
+".\Debug\FusionCenter.sbr"
+".\Debug\HierWin.sbr"
+".\Debug\LoadAnimation.sbr"
+".\Debug\LoadOBJ.sbr"
+".\Debug\LoadSkel.sbr"
+".\Debug\MainFrm.sbr"
+".\Debug\MathDefs.sbr"
+".\Debug\OGLView.sbr"
+".\Debug\SensorDataSetReader.sbr"
+".\Debug\Skeleton.sbr"
+".\Debug\Skully.sbr"
+".\Debug\UnscentedKalmanFilter.sbr"]
+Creating command line "bscmake.exe @C:\DOCUME~1\ligang\LOCALS~1\Temp\RSP1C.tmp"
+Creating browse info file...
+BSCMAKE: error BK1506 : cannot open file '.\Debug\FusionCenter.sbr': No such file or directory
+Error executing bscmake.exe.
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+Skully.exe - 5 error(s), 100 warning(s)
+</pre>
+</body>
+</html>
