@@ -1,0 +1,523 @@
+//-----------------------------------------------------------------------------
+// 单个16405sensor(只有spi)的数据采集，采样率设为100hz
+
+//      TH0 = 0xb1;	TL0= 0xde;采样率设为50hz
+//      TH0 = 0xd8;	TL0= 0xee;采样率设为100hz
+//-----------------------------------------------------------------------------
+#include "c8051f340.h"       
+#include <stddef.h>       
+#include "USB_API.h"
+//#include"port.h"
+#define IN_PACKET_SIZE 304
+#define uchar unsigned char          //定义一下方便使用
+#define uint  unsigned int
+#define ulong unsigned long
+//#define WriteDeviceAddress  0x3c     //定义器件在IIC总线中的地址
+//#define ReadDviceAddress   0x3d
+xdata BYTE In_Packet[IN_PACKET_SIZE];
+//xdata BYTE Temper[10][6];
+bit flag=0;
+bit SDT=0;
+bit SDQ=0;
+int read_data1=1;
+int read_data2=1;
+//int Temper[6];
+//int number=0;
+/*** [BEGIN] USB Descriptor Information [BEGIN] ***/
+code const UINT USB_VID = 0x10C4;
+code const UINT USB_PID = 0xEA61;
+code const BYTE USB_MfrStr[] = {0x1A,0x03,'S',0,'i',0,'l',0,'i',0,'c',0,'o',0,'n',0,' ',0,'L',0,'a',0,'b',0,'s',0};	                     //	Manufacturer String
+code const BYTE USB_ProductStr[] = {0x10,0x03,'U',0,'S',0,'B',0,' ',0,'A',0,'P',0,'I',0};	//	Product Desc. String
+code const BYTE USB_SerialStr[] = {0x0A,0x03,'1',0,'2',0,'3',0,'4',0};
+code const BYTE USB_MaxPower = 15;            // Max current = 30 mA (15 * 2)
+code const BYTE USB_PwAttributes = 0x80;      // Bus-powered, remote wakeup not supported
+code const UINT USB_bcdDevice = 0x0100;       // Device release number 1.00
+/*** [ END ] USB Descriptor Information [ END ] ***/
+
+
+	
+void Port_Init(void);
+void  SPI_Init(void);
+void TIMER0_Init(void);
+void ADIS16250_init(void);
+void Suspend_Device(void);
+void InitializeData();
+//void PrepareData();
+//void PrepareData2();
+void  SPI_senddata(int);
+void  SPI_readdata_first(int);
+void  SPI_readdata_next(int);
+
+////////////////////////////////////////////
+////////HMC5843
+////////////////////////////////////////////
+/*-------------起始位状态：SCL为高时，SDA线由高到低跳变，之后经延时后SCL由高到低跳变
+               停止位状态：SCL为高时，SDA线由低到高跳变
+               ------------------------------------------------*/
+
+/********************************************************************/
+void DelayMs(unsigned int number)     //定时函数
+{
+
+unsigned char temp;
+for(;number!=0;number--) {for(temp=0;temp!=0;temp--);}
+}
+///////////////////////////////////////////
+///////////////////////////////////////////
+
+
+//-----------------------------------------------------------------------------
+// Main Routine
+//-----------------------------------------------------------------------------
+void main(void) 
+{
+
+   PCA0MD &= ~0x40;                       // Disable Watchdog timer
+ //  CLKSEL =  0x03; 
+   OSCICN |= 0x03; 
+   EA		 = 1;    //开启总中断 
+   
+   SPI_Init();
+   Port_Init();
+ //  ADIS16250_init();
+	
+   USB_Clock_Start();                     // Init USB clock *before* calling USB_Init
+   USB_Init(USB_VID,USB_PID,USB_MfrStr,USB_ProductStr,USB_SerialStr,USB_MaxPower,USB_PwAttributes,USB_bcdDevice); 
+   USB_Int_Enable();
+  
+   
+   
+
+/* 	P3=0x04;
+//	SPI_senddata(0xb607);
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+//	SPI_senddata(0xbe10);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x05;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x06;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x08;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x09;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x0A;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x0B;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x010;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x011;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x12;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x020;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x021;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	
+	P3=0x022;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x040;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x041;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+	P3=0x042;
+	SPI_senddata(0xb4C6);
+	SPI_senddata(0xbe01);
+	DelayMs(10);
+//	SPI_senddata(0xb807);
+
+*/
+//	SPI_senddata(0xbe08);
+  // ADIS16250_init();*/
+
+   
+   TIMER0_Init();
+  // SPI_BUSY=1;
+   while (1);
+}
+void InitializeData()
+{	
+	unsigned int x=0;
+	for(; x < IN_PACKET_SIZE; ++x)
+		In_Packet[x] = 0;
+}
+void PrepareData()
+{
+    unsigned int x=0,num=1,i=0,j=0,temp=0;
+	//P3=0x04;
+	
+     for(i=0;i<16;i++)
+	 {
+        if(num==1)
+		{
+			P3=0x04;
+		}
+		else if(num==2)
+		{
+			P3=0x05;
+		}
+		else if(num==3)
+		{
+			P3=0x06;
+		}
+		else if(num==4)
+		{
+			P3=0x08;
+		}
+		else if(num==5)
+		{
+			P3=0x09;
+		}
+		else if(num==6)
+		{
+			P3=0x0a;
+		}
+		else if(num==7)
+		{
+			P3=0x0b;
+		}
+		else if(num==8)
+		{
+			P3=0x10;
+		}
+		else if(num==9)
+		{
+			P3=0x11;
+		}
+		else if(num==10)
+		{
+			P3=0x12;
+		}
+		else if(num==11)
+		{
+			P3=0x20;
+		}
+		else if(num==12)
+		{
+			P3=0x21;
+		}
+		else if(num==13)
+		{
+			P3=0x22;
+		}
+		else if(num==14)
+		{
+			P3=0x40;
+		}
+		else if(num==15)
+		{
+			P3=0x41;
+		}
+		else if(num==16)
+		{
+			P3=0x42;
+		}
+
+		In_Packet[x]=num;
+			num++;
+		SPI_readdata_first(0x0a);
+		x++;
+		SPI_readdata_next(0x0c);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x0e);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x04);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x06);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x08);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x10);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x12);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+		SPI_readdata_next(0x14);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+		x++;
+
+		SPI_readdata_next(0x00);
+		In_Packet[x]=read_data1;
+		x++;
+		In_Packet[x]=read_data2;
+        x++;
+	//	
+     }
+}
+//-----------------------------------------------------------------------------
+// Initialization Subroutines
+//-----------------------------------------------------------------------------
+
+//-------------------------
+// Port_Init
+//-------------------------
+// Port Initialization
+// - Configure the Crossbar and GPIO ports.
+//
+void Port_Init(void)
+{  
+   P0MDOUT  =0x0f;
+   P0SKIP	 = 0xf8;
+   P1SKIP	 = 0x3f;
+ 
+   XBR0      = 0x02;    //设置SPI使能                                      
+   XBR1      = 0x40;    //交叉开关使能               
+   //P0MDOUT   = 0x10;    //p0.4 推挽方式   输出    
+ //  P1MDOUT   = 0x0f;    
+  P1MDOUT=0x00;
+ //  P1MDIN=0x80;
+   P2MDOUT=0x00;
+
+   P3MDOUT=0xff;
+  // P0MDOUT |= 0x05;
+ //  P0=0xff;
+
+}
+/****************************************************************
+*
+*定时器初始化函数
+*****************************************************************/
+
+void  TIMER0_Init(void)
+{
+  // SCON0    = 0x10;                                                            
+   CKCON     = 0x08;
+ //  TH0       = 0xF6;		
+ //  TL0       = 0x74;   
+  // TH0       = 0xd8;		
+  // TL0       = 0xef;  
+    TH0       = 0xd8;		
+   TL0       = 0xee;                      
+   TMOD      |= 0x01;      //16位计数器
+   
+   PT0		 = 1;
+   ET0		 = 0;                  
+   TR0       = 1;                           
+  // TI0       = 1;     
+}
+void TIMER0_ISR(void) interrupt 1
+{
+ //  unsigned int x=0,num=1,i=0;
+ //  PT0		 = 0;
+   TR0       = 0; 
+   TH0       = 0xd8;		
+   TL0       = 0xee;
+   flag=1;
+//	PT0		 = 1;
+}
+/****************************************************************
+*
+*SPI初始化函数
+*****************************************************************/
+void SPI_Init(void)
+{
+    ESPI0     = 0;     //disable spi interrupt
+	PSPI0     = 0;
+	SPI0CFG   = 0x70;  //master
+	                   //Data centered on second edge of SCK period
+					   //SCK line high in idle state
+    SPI0CN    = 0x01;  //enable spi0
+    SPI0CKR   = 0x03;  //1500khz
+    SPIF=0;
+}
+
+/****************************************************************/
+/*****************************************************************
+*
+*I/O口模拟SPI收发数据
+*****************************************************************/
+void SPI_senddata(int command)
+{
+   int a,i;
+   a=command;
+ //  SPIF=0;
+
+   SPI0DAT  = (a&0xff00)/256;
+   while(SPIF==0);  
+   SPIF=0;  
+   SPI0DAT = (a&0x00ff);
+   while(SPIF==0);
+   SPIF=0;
+
+  // 	for(i=0;i<5;i++); 
+}
+
+void  SPI_readdata_first(int address)
+{
+	int a,i;
+	a=address; 
+	SPIF=0;
+   	SPI0DAT = a;
+	while(SPIF==0); 
+	SPIF=0; 
+   	SPI0DAT = 0;
+	while(SPIF==0);
+	SPIF=0;
+	for(i=0;i<5;i++);  // 必须有个时间间隔
+}
+void  SPI_readdata_next(int address)
+{
+    int a,i;
+	a=address; 
+	for(i=0;i<10;i++); 
+	SPI0DAT = a;  
+	while(SPIF==0);
+	SPIF=0;
+	read_data1 = SPI0DAT;
+	SPI0DAT = 0; 
+	for(i=0;i<5;i++);  
+	while(SPIF==0);
+	SPIF=0;
+	read_data2 = SPI0DAT;
+}
+/*****************************************************************
+*
+*ASIS16350初始化函数
+*****************************************************************/
+void ADIS16250_init()
+{
+  //  int i,j;
+	SPI_senddata(0xb807);
+
+ //  for(j=0;j<200;j++) 
+//	{
+//	    for(i=0;i<2000;i++);
+//	}    
+
+   	
+//	SPI_senddata(0xbe02);
+
+  //  for(j=0;j<200;j++) 
+//	{
+//	    for(i=0;i<2000;i++);
+//	}    
+}
+/////////////////////////////////////////////////////////
+//	Example ISR for USB_API
+void 	USB_API_TEST_ISR(void) interrupt 16
+{
+	BYTE INTVAL = Get_Interrupt_Source();
+	
+	if	(INTVAL	&	DEVICE_OPEN)				
+	{
+		InitializeData();
+		Block_Write(In_Packet, IN_PACKET_SIZE);
+		ET0		 = 1;
+	}
+	if (INTVAL & RX_COMPLETE)
+	{
+
+	}
+	if (INTVAL & TX_COMPLETE)
+	{
+       while(flag==0);
+		flag=0;
+		TR0       = 1; 
+		PrepareData();
+		Block_Write(In_Packet, IN_PACKET_SIZE);
+//		while(flag==0);
+//		flag=0;
+//		PT0		 = 1;
+	}
+	if (INTVAL & DEV_SUSPEND)
+	{
+      //  Suspend_Device();
+	}
+
+	if (INTVAL & DEV_CONFIGURED)
+	{
+		Port_Init();
+	}
+	if	(INTVAL	&	DEVICE_CLOSE)				//	Device closed
+	{
+		
+	}
+	if	(INTVAL	&	FIFO_PURGE)					//	Fifo purged
+	{
+		
+	}
+
+}
