@@ -1,0 +1,41 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: UniSens - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\GUANHO~1\LOCALS~1\Temp\RSP19.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/UniSens.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\GuanhongTao\My Documents\projects\UniSens\UniSens\RawDataView.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\GUANHO~1\LOCALS~1\Temp\RSP19.tmp" 
+Creating temporary file "C:\DOCUME~1\GUANHO~1\LOCALS~1\Temp\RSP1A.tmp" with contents
+[
+opengl32.lib glu32.lib glaux.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/UniSens.pdb" /debug /machine:I386 /out:"Debug/UniSens.exe" /pdbtype:sept 
+".\Debug\MainFrm.obj"
+".\Debug\RawDataView.obj"
+".\Debug\StdAfx.obj"
+".\Debug\UniSens.obj"
+".\Debug\UniSensDoc.obj"
+".\Debug\UniSensView.obj"
+".\Debug\UniSens.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\GUANHO~1\LOCALS~1\Temp\RSP1A.tmp"
+<h3>Output Window</h3>
+Compiling...
+RawDataView.cpp
+Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/UniSens.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\MainFrm.sbr" ".\Debug\RawDataView.sbr" ".\Debug\UniSens.sbr" ".\Debug\UniSensDoc.sbr" ".\Debug\UniSensView.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+UniSens.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

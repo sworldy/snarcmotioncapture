@@ -1,0 +1,438 @@
+/*===================================================*\
+|                                                     |
+|  Uni-Sensor Demostration System                     |
+|                                                     |
+|  Copyright (c) 2009 - Guanhong Tao                  |
+|      macrotao86@gmail.com                           |
+|      tgh05@software.nju.edu.cn                      |
+|                                                     |
+|  Created:                                           |
+|         2009/03/25                                  |
+|  License:                                           |
+|                                                     |
+|  Copyright 2009 Guanhong Tao, All Rights Reserved.  |
+|   For educational purposes only.                    |
+|   Please do not republish in electronic or          |
+|   print form without permission                     |
+|                                                     |
+|  Email me for the  docs and new versions            |
+|                                                     |
+\*===================================================*/
+
+// MainFrm.cpp : implementation of the CMainFrame class
+//
+#include "stdafx.h"
+#include "MainFrm.h"
+#include "UsbSelectDialog.h"
+#include "SiUSBXp.h"
+
+
+#include <fstream>
+#include <iostream>
+#include "UniSens.h"
+#include "UniSensDoc.h"
+#include "UniSensView.h"
+#include "RawDataView.h"
+#include "AngView.h"
+#include "MagView.h"
+#include "EulerView.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+#include "mmsystem.h"
+#include <math.h>
+#pragma comment(lib,"winmm.lib")
+
+#define PI 3.1415926535
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame
+
+IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
+
+BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
+	//{{AFX_MSG_MAP(CMainFrame)
+		// NOTE - the ClassWizard will add and remove mapping macros here.
+		//    DO NOT EDIT what you see in these blocks of generated code !
+	//}}AFX_MSG_MAP
+	ON_COMMAND(ID_OPEN_OPENUSBDEVICE, &CMainFrame::OnOpenOpenusbdevice)
+	ON_COMMAND(ID_USB_PLAY, &CMainFrame::OnUsbPlay)
+	ON_MESSAGE(WM_MY_MESSAGE, OnMyMessage) 
+	ON_WM_TIMER()
+	ON_WM_CLOSE()
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame construction/destruction
+static void HextoDec(char* buf, double* dest)
+{
+	   int i;
+       unsigned char* b = (unsigned char*)buf;
+       short a[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+       for ( i = 0; i < 18; i+=2) {
+               short tmp1 = b[i];
+               short tmp2 = b[i+1];
+               a[i/2] = ((tmp1 & 0x00FF) << 8)|(tmp2 & 0x00FF);
+       }
+
+       for ( i = 0; i < 9; i++) {
+       	
+               a[i] =(a[i] & 0x3FFF);
+               if((a[i] & 0x2000) == 0x2000)        {
+                       a[i] = ((~a[i]) + 1) & 0x3FFF;
+                       a[i] = -a[i];
+               }
+               if (i < 3)
+                       dest[i] = a[i]*0.00333*9.8;
+               else if (i < 6)
+               				 dest[i] = a[i]*0.00333*9.8;
+               else 
+               				 dest[i] = a[i]*0.00333*9.8;
+             }
+       
+
+}
+
+CMainFrame::CMainFrame()
+{
+	// TODO: add member initialization code here
+	for(int i=0; i<9; ++i)
+		averageGrav[i] = 0;
+	TimerID		= 0;
+	wAccuracy	= 0;
+	cnt			= 0;
+}
+
+CMainFrame::~CMainFrame()
+{
+	timeKillEvent(TimerID); 
+	timeEndPeriod(wAccuracy);
+}
+
+BOOL CMainFrame::OnCreateClient( LPCREATESTRUCT /*lpcs*/,
+	CCreateContext* pContext)
+{
+	CRect   rect;  
+	GetClientRect(&rect);   
+
+	m_wndSplitter1.CreateStatic(this, 1, 2);
+
+    m_wndSplitter3.CreateStatic(&m_wndSplitter1, 3, 1,WS_CHILD | WS_VISIBLE, m_wndSplitter1.IdFromRowCol(0, 0));
+	m_wndSplitter3.CreateView(0, 0, RUNTIME_CLASS(CRawDataView), CSize(0,rect.Height() * 0.309), pContext );
+	m_wndSplitter3.CreateView(1, 0, RUNTIME_CLASS(CAngView), CSize(0,rect.Height() * 0.309), pContext );
+	m_wndSplitter3.CreateView(2, 0, RUNTIME_CLASS(CMagView), CSize(0,0), pContext );
+	
+	m_wndSplitter2.CreateStatic(&m_wndSplitter1, 2, 1,WS_CHILD | WS_VISIBLE, m_wndSplitter1.IdFromRowCol(0, 1));
+	m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CEulerView), CSize(0,rect.Height() * 0.618), pContext );
+	m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CUniSensView), CSize(0,0), pContext );
+
+	m_wndSplitter1.SetColumnInfo(0, rect.Width() * 0.618,0);
+	m_wndSplitter1.SetColumnInfo(1, rect.Width() * 0.382 ,0);
+	m_wndSplitter1.RecalcLayout();
+
+	SetActiveView( (CView*)m_wndSplitter2.GetPane(1,0) );
+
+	return TRUE;
+}
+BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
+{
+	cs.style &= ~FWS_ADDTOTITLE;  
+    cs.style &= ~WS_THICKFRAME; 
+    cs.style |= WS_DLGFRAME; 
+	
+
+    int cxScreen = ::GetSystemMetrics(SM_CXSCREEN);
+    int cyScreen = ::GetSystemMetrics(SM_CYSCREEN); 
+
+    cs.x = 0; 
+    cs.y = 0;
+    cs.cx = cxScreen; 
+    cs.cy = cxScreen; 
+	if( !CFrameWnd::PreCreateWindow(cs) )
+		return FALSE;
+	// TODO: Modify the Window class or styles here by modifying
+	//  the CREATESTRUCT cs
+
+	return TRUE;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame diagnostics
+
+#ifdef _DEBUG
+void CMainFrame::AssertValid() const
+{
+	CFrameWnd::AssertValid();
+}
+
+void CMainFrame::Dump(CDumpContext& dc) const
+{
+	CFrameWnd::Dump(dc);
+}
+
+#endif //_DEBUG
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame message handlers
+BOOL CMainFrame::GetDeviceList()
+{
+	DWORD	dwNumDevices = 0;
+	SI_DEVICE_STRING	devStr;
+
+	SI_STATUS status = SI_GetNumDevices(&dwNumDevices);
+
+	if (status == SI_SUCCESS)
+	{
+		for (DWORD d = 0; d < dwNumDevices; d++)
+		{
+			status = SI_GetProductString(d, devStr, SI_RETURN_SERIAL_NUMBER);
+
+			if (status == SI_SUCCESS)
+			{
+				CString str = devStr;
+				m_DeviceList.push_back(str);
+			}
+		}
+	}
+	else
+	{
+		return FALSE;
+	}
+
+	return TRUE;
+}
+BOOL CMainFrame::SelectDevice()
+{
+	// ask for selection
+	UsbSelectDialog dlg;
+	dlg.Initialize(&m_DeviceList);
+	if (dlg.DoModal() != IDOK)
+		return FALSE;
+	m_nDeviceNum = dlg.m_deviceIndex;
+	m_sDeviceName = dlg.m_deviceList[dlg.m_deviceIndex];
+
+	return TRUE;
+}
+
+void CMainFrame::OnOpenOpenusbdevice()
+{
+	// TODO: Add your command handler code here
+	if (!GetDeviceList())
+	{	
+		AfxMessageBox("Error finding USB device. Aborting application",MB_OK|MB_ICONEXCLAMATION);
+		return ;
+	}
+
+	m_nDeviceNum = -1;
+
+	if (!SelectDevice())
+		return ;
+
+	// Set read write timeouts
+	//SI_SetTimeouts(100000, 100000);
+
+	// Open device handle
+	SI_STATUS status = SI_Open((DWORD)m_nDeviceNum, &m_hUSBDevice);
+
+	if (status != SI_SUCCESS)
+	{
+		CString sMessage;
+		sMessage.Format("Error opening device: %s\n\nApplication is aborting.\nReset hardware and try again.", m_sDeviceName);
+		if (AfxMessageBox(sMessage,MB_OK|MB_ICONEXCLAMATION))
+		{
+			return ;
+		}
+	}
+}
+
+void CALLBACK MyTimeProc( UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1,DWORD dw2)
+{
+	CMainFrame* pMF=(CMainFrame*)AfxGetApp()->m_pMainWnd;
+	::SendMessage(pMF->m_hWnd,WM_MY_MESSAGE,0,0);
+	//pMF->PlayFromDevice();
+	//AfxMessageBox("shit");	
+}
+
+void CMainFrame::OnUsbPlay()
+{
+	// TODO: Add your command handler code here
+
+	SI_STATUS status = SI_SUCCESS;
+	char buffer[64];
+	DWORD dwBytesSucceed = 0;
+	DWORD dwBytesReadRequest = 64;
+	int i, k;
+	//double averageGrav[9];
+	double buf[9];
+
+	CRawDataView* pRDV = (CRawDataView*)m_wndSplitter3.GetPane(0,0);
+	CAngView	* pAV  = (CAngView*)m_wndSplitter3.GetPane(1,0);
+	CMagView	* pMV  = (CMagView*)m_wndSplitter3.GetPane(2,0);
+	CEulerView	* pEV  = (CEulerView*)m_wndSplitter2.GetPane(0,0);
+	CUniSensView* pUSV = (CUniSensView*)m_wndSplitter2.GetPane(1,0);
+
+	pRDV->m_TimeList.clear();
+	pRDV->m_RefValueList.clear();
+	pRDV->m_OutputValueList.clear();
+	pRDV->m_ErrorValueList.clear();
+	pRDV->Invalidate();
+
+	pAV->m_TimeList.clear();
+	pAV->m_RefValueList.clear();
+	pAV->m_OutputValueList.clear();
+	pAV->m_ErrorValueList.clear();
+	pAV->Invalidate();
+
+	pMV->m_TimeList.clear();
+	pMV->m_RefValueList.clear();
+	pMV->m_OutputValueList.clear();
+	pMV->m_ErrorValueList.clear();
+	pMV->Invalidate();
+
+	pEV->m_TimeList.clear();
+	pEV->m_RefValueList.clear();
+	pEV->m_OutputValueList.clear();
+	pEV->m_ErrorValueList.clear();
+	pEV->Invalidate();
+
+	for( i=0; i<200; ++i)
+	{
+		status = SI_Read(m_hUSBDevice, buffer, dwBytesReadRequest, &dwBytesSucceed);
+		
+
+		if (dwBytesSucceed != dwBytesReadRequest) 
+		{
+			
+			CString sError;
+			sError.Format("1Error reading from USB.\nRead %d of %d bytes.\n\nApplication is aborting.\nReset hardware and try again.", dwBytesSucceed, dwBytesReadRequest);
+			if (AfxMessageBox(sError,MB_OK|MB_ICONEXCLAMATION))
+			{
+				return;
+			}
+		}
+		else
+		{		
+				HextoDec(buffer, buf);
+				for( k=0; k<9; ++k)
+				{
+					averageGrav[k]+=buf[k];
+				}
+		}
+		Sleep(10);
+	}
+	
+	for( i=0; i<9;  ++i){
+			averageGrav[i]/=200;
+	}
+	qkf = new QKF(&averageGrav[0],&averageGrav[6]);
+
+	if(timeGetDevCaps(&tc,sizeof(TIMECAPS))==TIMERR_NOERROR)
+	{
+ 		wAccuracy=min(max(tc.wPeriodMin,1),tc.wPeriodMax); 
+ 		timeBeginPeriod(wAccuracy); 
+ 		if((TimerID=timeSetEvent(1,wAccuracy,(LPTIMECALLBACK)MyTimeProc,(DWORD)this,TIME_PERIODIC))==NULL) 
+ 			AfxMessageBox("Timer started failed!",MB_OK|MB_ICONASTERISK);
+	}
+}
+
+static inline void GetEulerValue(double Quat_w,double Quat_x,double Quat_y,double Quat_z,
+								 double *roll, double *pitch, double *yaw)
+{
+	
+	*roll  = atan( 2*(Quat_y*Quat_z + Quat_w*Quat_x ) / (2*Quat_w*Quat_w + 2*Quat_z*Quat_z-1));
+	*pitch = -asin( 2*Quat_x*Quat_z - 2*Quat_w*Quat_y);
+	*yaw   = atan( (2*Quat_x*Quat_y + 2*Quat_w*Quat_z) / (2*Quat_w*Quat_w + 2*Quat_x*Quat_x-1));
+	*roll = *roll * 180 / PI;
+	*pitch = *pitch *180 /PI;
+	*yaw   = *yaw *180 /PI;
+}
+
+void CMainFrame::PlayFromDevice()
+{
+	CRawDataView* pRDV = (CRawDataView*)m_wndSplitter3.GetPane(0,0);
+	CAngView	* pAV  = (CAngView*)m_wndSplitter3.GetPane(1,0);
+	CMagView	* pMV  = (CMagView*)m_wndSplitter3.GetPane(2,0);
+	CEulerView	* pEV  = (CEulerView*)m_wndSplitter2.GetPane(0,0);
+	CUniSensView* pUSV = (CUniSensView*)m_wndSplitter2.GetPane(1,0);
+
+	SI_STATUS status = SI_SUCCESS;
+	char buffer[64];
+	DWORD dwBytesSucceed = 0;
+	DWORD dwBytesReadRequest = 64;
+	double buf[9];
+	double roll, pitch, yaw;
+	double Quat_w,Quat_x,Quat_y,Quat_z;
+
+R:	status = SI_Read(m_hUSBDevice, buffer, dwBytesReadRequest, &dwBytesSucceed);
+	if (dwBytesSucceed != dwBytesReadRequest) 
+	{
+			
+		/*CString sError;
+		sError.Format("2Error reading from USB.\nRead %d of %d bytes.\n\nApplication is aborting.\nReset hardware and try again.", dwBytesSucceed, dwBytesReadRequest);
+		if (AfxMessageBox(sError,MB_OK|MB_ICONEXCLAMATION))
+		{
+			return;
+		}*/
+		goto R;
+	}
+	else
+	{		
+			HextoDec(buffer, buf);
+			qkf->QKF_Filtering(buf);
+//raw_file<<buf[0]<<"\t"<<buf[1]<<"\t"<<buf[2]<<"\t"<<buf[3]<<"\t"<<buf[4]<<"\t"<<buf[5]<<"\t"<<buf[6]<<"\t"<<buf[7]<<"\t"<<buf[8]<<"\n";
+			Quat_w = qkf->state_estimate[3];
+			Quat_x = qkf->state_estimate[0];
+			Quat_y = qkf->state_estimate[1];
+			Quat_z = qkf->state_estimate[2];
+	}
+	
+	GetEulerValue(Quat_w,Quat_x,Quat_y,Quat_z,&roll, &pitch, &yaw);
+	double dTime = ::timeGetTime()/1000.0;
+	pRDV->AddValue(dTime, buf[0], buf[1], buf[2]);
+	pRDV->SetValue(buf[0], buf[1], buf[2]);
+	pRDV->UpdateCurve();
+
+	pAV->AddValue(dTime, buf[3], buf[4], buf[5]);
+	pAV->SetValue(buf[3], buf[4], buf[5]);
+	pAV->UpdateCurve();
+
+	pMV->AddValue(dTime, buf[6], buf[7], buf[8]);
+	pMV->SetValue(buf[6], buf[7], buf[8]);
+	pMV->UpdateCurve();
+
+	pEV->AddValue(dTime, roll, pitch, yaw);
+	pEV->SetValue(roll, pitch, yaw);
+	pEV->UpdateCurve();
+	
+	pUSV->SetQuaternion(Quat_w, Quat_x, Quat_y, Quat_z, ++cnt);
+
+}
+
+LRESULT CMainFrame::OnMyMessage(WPARAM wParam, LPARAM lParam)
+{
+	PlayFromDevice();
+	return 0;
+} 
+
+void CMainFrame::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	PlayFromDevice();
+	CFrameWnd::OnTimer(nIDEvent);
+}
+
+void CMainFrame::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+	if(0 != TimerID)
+	{
+		timeKillEvent(TimerID); 
+		timeEndPeriod(wAccuracy); 
+		::PostQuitMessage(0);
+	}
+	CFrameWnd::OnClose();
+}
